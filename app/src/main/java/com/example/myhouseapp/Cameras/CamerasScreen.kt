@@ -9,28 +9,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myhouseapp.Cameras.DataClassesCameras.CameraModel
+import coil.compose.rememberAsyncImagePainter
+import com.example.myhouseapp.ItemDataBase
 import com.example.myhouseapp.R
 
-private val cameraList = mutableListOf<CameraModel>()
-
-@Preview
 @Composable
-fun CameraScreen() {
+fun CameraScreen(cameraList: List<ItemDataBase>) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -60,20 +57,22 @@ fun CameraScreen() {
 }
 
 @Composable
-fun CardCamera(model: CameraModel) {
+fun CardCamera(model: ItemDataBase) {
     Column(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
     ) {
         Image(
-            modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = R.drawable.camera_icon),
+            modifier = Modifier
+                .wrapContentWidth()
+                .wrapContentHeight(),
+            painter = rememberAsyncImagePainter(model.snapshot),
             contentDescription = "Camera"
         )
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "ABC",
+            text = model.name!!,
             style = TextStyle(
                 fontSize = 17.sp,
                 fontFamily = FontFamily(Font(R.font.circe)),

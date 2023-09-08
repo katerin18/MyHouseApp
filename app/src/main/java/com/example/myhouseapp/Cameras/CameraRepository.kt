@@ -1,4 +1,4 @@
-package com.example.myhouseapp.Doors
+package com.example.myhouseapp.Cameras
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,24 +8,24 @@ import io.realm.kotlin.RealmConfiguration
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
 
-class DoorRepository : ViewModel() {
-    private val responseDoor = GetDoors()
+class CameraRepository: ViewModel() {
+    private val responseCamera = GetCameras()
     private val config = RealmConfiguration.create(schema = setOf(ItemDataBase::class))
     private val realm: Realm = Realm.open(config)
 
-    fun saveDoors() {
+    fun saveCameras() {
         viewModelScope.launch {
-            val listDoor = responseDoor.getDoorsFromRequest()
-            for (i in listDoor.indices) {
+            val listCamera = responseCamera.getCamerasFromRequest()
+            for (i in listCamera.indices) {
                 realm.writeBlocking {
                     copyToRealm(ItemDataBase().apply {
                         _id = ObjectId()
-                        isDoor = true
-                        name = listDoor[i].name
-                        snapshot = listDoor[i].snapshot
-                        room = listDoor[i].room
-                        id = listDoor[i].id
-                        favorites = listDoor[i].favorites
+                        isDoor = false
+                        name = listCamera[i].name
+                        snapshot = listCamera[i].snapshot
+                        room = listCamera[i].room
+                        id = listCamera[i].id
+                        favorites = listCamera[i].favorites
                     })
                 }
             }

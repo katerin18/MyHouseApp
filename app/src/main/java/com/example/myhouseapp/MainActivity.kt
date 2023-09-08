@@ -28,35 +28,48 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myhouseapp.Cameras.CameraRepository
 import com.example.myhouseapp.Cameras.CameraScreen
 import com.example.myhouseapp.Doors.DoorRepository
 import com.example.myhouseapp.Doors.DoorsScreen
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.query.RealmResults
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getDoorsRealm()
+        getCameraRealm()
         setContent {
             MainTitle()
         }
     }
 }
 
-fun getDoorsRealm() {
+fun getDoorsRealm(): RealmResults<ItemDataBase> {
     val doorRepository = DoorRepository()
-    val config = RealmConfiguration.create(schema = setOf(ItemRealm::class))
+    val config = RealmConfiguration.create(schema = setOf(ItemDataBase::class))
     val realm: Realm = Realm.open(config)
-    val data = realm.query<ItemRealm>("isDoor == true").find()
-    if(data.isEmpty()) {
+    val doors = realm.query<ItemDataBase>("isDoor == true").find()
+    Log.d("my_tag", "getDoorsRealm")
+    if(doors.isEmpty()) {
         doorRepository.saveDoors()
     }
-    for(i in data) {
-        i.name?.let { Log.d("my_tag", it) }
+    return doors
+}
+
+fun getCameraRealm(): RealmResults<ItemDataBase> {
+    val cameraRepository = CameraRepository()
+    val config = RealmConfiguration.create(schema = setOf(ItemDataBase::class))
+    val realm: Realm = Realm.open(config)
+    val cameras = realm.query<ItemDataBase>("isDoor == false").find()
+    if(cameras.isEmpty()) {
+        cameraRepository.saveCameras()
     }
+    return cameras
 }
 
 @Preview
@@ -119,8 +132,8 @@ fun TabScreen() {
             }
         }
         when (tabIndex) {
-            0 -> CameraScreen()
-            1 -> DoorsScreen()
+            0 -> CameraScreen(getCameraRealm())
+            1 -> DoorsScreen(getDoorsRealm())
         }
     }
 }

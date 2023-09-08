@@ -2,9 +2,9 @@ package com.example.myhouseapp.Doors
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import com.example.myhouseapp.ItemDataBase
 
 @Composable
-fun DoorsScreen() {
+fun DoorsScreen(doorList: List<ItemDataBase>) {
     Text("Doors Screen")
 }
