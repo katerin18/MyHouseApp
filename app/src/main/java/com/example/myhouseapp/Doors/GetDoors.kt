@@ -1,8 +1,5 @@
 package com.example.myhouseapp.Doors
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.myhouseapp.Doors.DataClassesDoors.DoorModel
 import com.example.myhouseapp.Doors.DataClassesDoors.DoorsResponse
 import com.google.gson.Gson

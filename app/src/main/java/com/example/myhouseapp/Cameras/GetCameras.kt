@@ -20,7 +20,7 @@ class GetCameras : ViewModel() {
         }
     }
 
-     suspend fun getCamerasFromRequest(): List<CameraModel> {
+    suspend fun getCamerasFromRequest(): List<CameraModel> {
         return try {
             val response = client.get(CAMERA_URL)
             val parsedResponseBody =

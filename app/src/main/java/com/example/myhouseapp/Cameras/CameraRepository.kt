@@ -8,7 +8,7 @@ import io.realm.kotlin.RealmConfiguration
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
 
-class CameraRepository: ViewModel() {
+class CameraRepository : ViewModel() {
     private val responseCamera = GetCameras()
     private val config = RealmConfiguration.create(schema = setOf(ItemDataBase::class))
     private val realm: Realm = Realm.open(config)

@@ -1,14 +1,11 @@
 package com.example.myhouseapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -37,7 +34,6 @@ import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.query.RealmResults
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,8 +50,7 @@ fun getDoorsRealm(): RealmResults<ItemDataBase> {
     val config = RealmConfiguration.create(schema = setOf(ItemDataBase::class))
     val realm: Realm = Realm.open(config)
     val doors = realm.query<ItemDataBase>("isDoor == true").find()
-    Log.d("my_tag", "getDoorsRealm")
-    if(doors.isEmpty()) {
+    if (doors.isEmpty()) {
         doorRepository.saveDoors()
     }
     return doors
@@ -66,7 +61,7 @@ fun getCameraRealm(): RealmResults<ItemDataBase> {
     val config = RealmConfiguration.create(schema = setOf(ItemDataBase::class))
     val realm: Realm = Realm.open(config)
     val cameras = realm.query<ItemDataBase>("isDoor == false").find()
-    if(cameras.isEmpty()) {
+    if (cameras.isEmpty()) {
         cameraRepository.saveCameras()
     }
     return cameras
@@ -75,7 +70,7 @@ fun getCameraRealm(): RealmResults<ItemDataBase> {
 @Preview
 @Composable
 fun MainTitle() {
-    Column(modifier = Modifier.background(Color.White)) {
+    Column() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -88,7 +83,7 @@ fun MainTitle() {
                     fontSize = 21.sp,
                     lineHeight = 26.sp,
                     fontFamily = FontFamily(Font(R.font.circe)),
-                    fontWeight = FontWeight(400),
+                    fontWeight = FontWeight.Bold,
                     color = Color(0xFF333333),
                     textAlign = TextAlign.Center,
                 )
@@ -101,13 +96,11 @@ fun MainTitle() {
 @Composable
 fun TabScreen() {
     var tabIndex by remember { mutableStateOf(0) }
-
     val tabs = listOf("Камеры", "Двери")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         TabRow(
-            selectedTabIndex = tabIndex,
-            containerColor = Color.White
+            selectedTabIndex = tabIndex
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
@@ -118,16 +111,14 @@ fun TabScreen() {
                                 fontSize = 17.sp,
                                 lineHeight = 16.sp,
                                 fontFamily = FontFamily(Font(R.font.circe)),
-                                fontWeight = FontWeight(400),
+                                fontWeight = FontWeight.Bold,
                                 color = Color(0xFF333333),
                                 textAlign = TextAlign.Center,
                             )
                         )
                     },
                     selected = tabIndex == index,
-                    onClick = { tabIndex = index },
-                    selectedContentColor = MaterialTheme.colorScheme.secondary,
-                    unselectedContentColor = MaterialTheme.colorScheme.secondary
+                    onClick = { tabIndex = index }
                 )
             }
         }
