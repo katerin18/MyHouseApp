@@ -93,7 +93,14 @@ fun CardCamera(model: ItemDataBase) {
         background = Color(0xFFEFCD87)
     )
 
+    val leftSwipe = SwipeAction(
+        onSwipe = {},
+        icon = {},
+        background = Color.White
+    )
+
     SwipeableActionsBox(
+        startActions = listOf(leftSwipe),
         endActions = listOf(favIconButton),
         swipeThreshold = 10.dp,
         backgroundUntilSwipeThreshold = Color.White
