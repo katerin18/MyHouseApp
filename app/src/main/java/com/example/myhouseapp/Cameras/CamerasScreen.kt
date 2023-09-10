@@ -40,106 +40,109 @@ import com.example.myhouseapp.R
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
 
-@Composable
-fun CameraScreen(cameraList: List<ItemDataBase>) {
-    Text(
-        modifier = Modifier
-            .padding(21.dp, 15.dp, 21.dp, 0.dp)
-            .fillMaxWidth(),
-        text = "Гостиная",
-        style = TextStyle(
-            fontSize = 21.sp,
-            fontFamily = FontFamily(Font(R.font.circe)),
-            fontWeight = FontWeight(300),
-            color = Color(0xFF333333),
-        )
-    )
+class CamerasScreen {
 
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        contentPadding = PaddingValues(horizontal = 21.dp, vertical = 10.dp)
-    ) {
-        items(cameraList) { model ->
-            Column(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .clip(shape = RoundedCornerShape(size = 12.dp))
-                    .background(Color.White)
-            ) {
-                CardCamera(model = model)
+    @Composable
+    fun CameraScreen_(cameraList:  List<ItemDataBase>) {
+        Text(
+            modifier = Modifier
+                .padding(21.dp, 15.dp, 21.dp, 0.dp)
+                .fillMaxWidth(),
+            text = "Гостиная",
+            style = TextStyle(
+                fontSize = 21.sp,
+                fontFamily = FontFamily(Font(R.font.circe)),
+                fontWeight = FontWeight(300),
+                color = Color(0xFF333333),
+            )
+        )
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(horizontal = 21.dp, vertical = 10.dp)
+        ) {
+            items(cameraList) { model ->
+                Column(
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .clip(shape = RoundedCornerShape(size = 12.dp))
+                        .background(Color.White)
+                ) {
+                    CardCamera(model = model)
+                }
             }
         }
     }
-}
 
-@Composable
-fun CardCamera(model: ItemDataBase) {
-    var isStarVisible by remember { mutableStateOf(false) }
+    @Composable
+    fun CardCamera(model: ItemDataBase) {
+        var isStarVisible by remember { mutableStateOf(false) }
 
-    val favIconButton = SwipeAction(
-        onSwipe = {
-            isStarVisible = !isStarVisible
-        },
-        icon = {
-            Icon(
-                modifier = Modifier
-                    .padding(5.dp)
-                    .height(20.dp)
-                    .width(20.dp),
-                painter = painterResource(id = R.drawable.star),
-                contentDescription = "Add to favorites",
-            )
-        },
-        background = Color(0xFFEFCD87)
-    )
-
-    val leftSwipe = SwipeAction(
-        onSwipe = {},
-        icon = {},
-        background = Color.White
-    )
-
-    SwipeableActionsBox(
-        startActions = listOf(leftSwipe),
-        endActions = listOf(favIconButton),
-        swipeThreshold = 10.dp,
-        backgroundUntilSwipeThreshold = Color.White
-    ) {
-        Column(modifier = Modifier.background(Color.White)) {
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(model.snapshot)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "Camera"
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
+        val favIconButton = SwipeAction(
+            onSwipe = {
+                isStarVisible = !isStarVisible
+            },
+            icon = {
+                Icon(
                     modifier = Modifier
-                        .wrapContentWidth()
-                        .padding(16.dp),
-                    text = model.name!!,
-                    style = TextStyle(
-                        fontSize = 17.sp,
-                        fontFamily = FontFamily(Font(R.font.circe)),
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF555555),
-                    )
+                        .padding(5.dp)
+                        .height(20.dp)
+                        .width(20.dp),
+                    painter = painterResource(id = R.drawable.star),
+                    contentDescription = "Add to favorites",
                 )
-                if (isStarVisible) {
-                    Icon(
-                        modifier = Modifier.padding(10.dp),
-                        painter = painterResource(id = R.drawable.star_icon),
-                        contentDescription = "Added to fav",
-                        tint = Color(0xFFFFCD00)
+            },
+            background = Color(0xFFEFCD87)
+        )
+
+        val leftSwipe = SwipeAction(
+            onSwipe = {},
+            icon = {},
+            background = Color.White
+        )
+
+        SwipeableActionsBox(
+            startActions = listOf(leftSwipe),
+            endActions = listOf(favIconButton),
+            swipeThreshold = 10.dp,
+            backgroundUntilSwipeThreshold = Color.White
+        ) {
+            Column(modifier = Modifier.background(Color.White)) {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(model.snapshot)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "Camera"
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .padding(16.dp),
+                        text = model.name!!,
+                        style = TextStyle(
+                            fontSize = 17.sp,
+                            fontFamily = FontFamily(Font(R.font.circe)),
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF555555),
+                        )
                     )
+                    if (isStarVisible) {
+                        Icon(
+                            modifier = Modifier.padding(10.dp),
+                            painter = painterResource(id = R.drawable.star_icon),
+                            contentDescription = "Added to fav",
+                            tint = Color(0xFFFFCD00)
+                        )
+                    }
                 }
             }
         }

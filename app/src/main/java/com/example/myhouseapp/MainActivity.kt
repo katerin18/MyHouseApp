@@ -28,45 +28,33 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModelProvider
 import com.example.myhouseapp.Cameras.CameraRepository
-import com.example.myhouseapp.Cameras.CameraScreen
+import com.example.myhouseapp.Cameras.CamerasScreen
 import com.example.myhouseapp.Doors.DoorRepository
 import com.example.myhouseapp.Doors.DoorsScreen
-import io.realm.kotlin.Realm
-import io.realm.kotlin.RealmConfiguration
-import io.realm.kotlin.ext.query
-import io.realm.kotlin.query.RealmResults
 
 class MainActivity : ComponentActivity() {
-    private lateinit var doorViewModel: DoorRepository
-    private lateinit var cameraViewModel: CameraRepository
+    private lateinit var doorRepository: DoorRepository
+    private lateinit var cameraRepository: CameraRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        doorViewModel = ViewModelProvider(this)[DoorRepository::class.java]
-        cameraViewModel = ViewModelProvider(this)[CameraRepository::class.java]
-        if (doorViewModel.getDoors().value.isEmpty()) {
-            doorViewModel.saveDoors()
+        doorRepository = DoorRepository()
+        cameraRepository = CameraRepository()
+
+        if (doorRepository.getDoors().value.isEmpty()) {
+            doorRepository.saveDoors()
+        }
+
+        if (cameraRepository.getCameras().value.isEmpty()) {
+            cameraRepository.saveCameras()
         }
 
         setContent {
             MainTitle()
         }
     }
-
-    private fun getCameraRealm(): RealmResults<ItemDataBase> {
-        val cameraRepository = CameraRepository()
-        val config = RealmConfiguration.create(schema = setOf(ItemDataBase::class))
-        val realm: Realm = Realm.open(config)
-        val cameras = realm.query<ItemDataBase>("isDoor == false").find()
-        if (cameras.isEmpty()) {
-            cameraRepository.saveCameras()
-        }
-        return cameras
-    }
-
     @Preview
     @Composable
     fun MainTitle() {
@@ -123,18 +111,22 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
-            val data by doorViewModel.getDoors().collectAsState()
+            val dataDoors by doorRepository.getDoors().collectAsState()
+            val dataCameras by cameraRepository.getCameras().collectAsState()
 
             LaunchedEffect(key1 = Unit) {
-                doorViewModel.getDoors()
+                doorRepository.getDoors()
+                cameraRepository.getCameras()
             }
-            if (data.isNotEmpty()) {
-                when (tabIndex) {
-                    0 -> CameraScreen(getCameraRealm())
-                    1 -> {
-                        val doorScreen = DoorsScreen()
-                        doorScreen.DoorsScreen_(doorList = data)
-                    }
+            when (tabIndex) {
+                0 -> {
+                    val cameraScreen = CamerasScreen()
+                    cameraScreen.CameraScreen_(cameraList = dataCameras)
+                }
+
+                1 -> {
+                    val doorScreen = DoorsScreen()
+                    doorScreen.DoorsScreen_(doorList = dataDoors)
                 }
             }
         }
