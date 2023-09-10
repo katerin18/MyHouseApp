@@ -1,10 +1,14 @@
 package com.example.myhouseapp.Cameras
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myhouseapp.ItemDataBase
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
+import io.realm.kotlin.ext.query
+import io.realm.kotlin.query.RealmResults
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
 
@@ -13,6 +17,8 @@ class CameraRepository : ViewModel() {
     private val config = RealmConfiguration.create(schema = setOf(ItemDataBase::class))
     private val realm: Realm = Realm.open(config)
 
+    private val _cameras = MutableLiveData<RealmResults<ItemDataBase>>()
+    val cameras: LiveData<RealmResults<ItemDataBase>> get() = _cameras
     fun saveCameras() {
         viewModelScope.launch {
             val listCamera = responseCamera.getCamerasFromRequest()
@@ -30,5 +36,9 @@ class CameraRepository : ViewModel() {
                 }
             }
         }
+    }
+
+    fun getCameras() {
+        val doors = realm.query<ItemDataBase>("isDoor != true").find()
     }
 }

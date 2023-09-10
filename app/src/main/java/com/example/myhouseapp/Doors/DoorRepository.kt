@@ -5,6 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.myhouseapp.ItemDataBase
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
+import io.realm.kotlin.ext.query
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
 
@@ -12,6 +16,7 @@ class DoorRepository : ViewModel() {
     private val responseDoor = GetDoors()
     private val config = RealmConfiguration.create(schema = setOf(ItemDataBase::class))
     private val realm: Realm = Realm.open(config)
+    val allDoors = MutableStateFlow<List<ItemDataBase>>(listOf())
 
     fun saveDoors() {
         viewModelScope.launch {
@@ -30,5 +35,17 @@ class DoorRepository : ViewModel() {
                 }
             }
         }
+    }
+
+    fun getDoors(): StateFlow<List<ItemDataBase>> {
+        val doors = realm.query<ItemDataBase>("isDoor == true").find()
+        allDoors.value = realm.copyFromRealm(doors)
+
+        return allDoors.asStateFlow()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        realm.close()
     }
 }
